@@ -34,9 +34,13 @@ def read_excel():
 
 
 if __name__ == '__main__':
-    start_row = input("从第几行开始解析:")
-    start_col = input("从第几列开始解析:")
-    result_file = sys.argv[1].split('.')[0] + '.txt'
+    try:
+        result_file = sys.argv[1].split('.')[0] + '.txt'
+    except Exception:
+        print "缺失文件参数"
+        exit(-1)
+    start_row = input("which row from parse:")
+    start_col = input("which col from parse:")
     read_excel()
     os_path = os.getcwd()
     print "parse completed ,result save in %s%s" % (os_path, result_file)
