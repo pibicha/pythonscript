@@ -39,8 +39,8 @@ if __name__ == '__main__':
     except Exception:
         print "缺失文件参数"
         exit(-1)
-    start_row = input("which row from parse:")
-    start_col = input("which col from parse:")
+    start_row = input("which row parse from:")
+    start_col = input("which col parse from:")
     read_excel()
     os_path = os.getcwd()
     print "parse completed ,result save in %s%s" % (os_path, result_file)
