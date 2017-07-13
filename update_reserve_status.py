@@ -34,18 +34,20 @@ def updateReserveByMobile(mobile, status):
     cursor.execute(sql)
     row = cursor.fetchone()
     if row is None:
-        print "该手机号还没有预约！"
+        print "you have no reserve with mobile： ", mobile
         return
     reserveId = row[0]
 
     update = "update tbl_he_reserve set status=%s where he_id = %s" % (status, reserveId)
     cursor.execute(update)
+    conn.commit()
+    cursor.close()
 
     print "更新成功！"
 
 
 if __name__ == '__main__':
-    mobile = input("请输入手机号：")
-    print "0-预约 1-到检未出报告 2-已出报告,3已出PDF 4-过期 5-取消"
-    status = input("请输入需要更改的预约状态：")
+    mobile = input("输入预约的手机号(只能更新该手机号最新的一条预约状态)：".encode("utf-8"))
+    print "\n\n\n"
+    status = input("0-预约 1-到检未出报告 2-已出报告,3已出PDF 4-过期 5-取消：")
     updateReserveByMobile(mobile, status)
