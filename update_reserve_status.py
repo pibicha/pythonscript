@@ -5,7 +5,6 @@ import pymysql
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-import sys
 
 
 
