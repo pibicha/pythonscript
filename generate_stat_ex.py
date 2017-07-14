@@ -47,21 +47,24 @@ def generateBillStat(cmpId):
     createTime = max_createTime[0]
     for statementId in all_statementId:
         updateStatement = """
-                update tbl_cmp_fund_statement set create_time = %s WHERE clear_id = %s
+                update tbl_cmp_fund_statement set create_time = '%s' WHERE clear_id = %s
             """ % (createTime.strftime("%Y-%m-%d %H:%M:%S"), statementId[0])
 
         startDate = createTime
         endDate = createTime + datetime.timedelta(days=1)
 
-        print createTime
-        print startDate.strftime("%Y-%m-%d %H:%M:%S"), endDate.strftime("%Y-%m-%d %H:%M:%S")
+        # print createTime
+        # print startDate.strftime("%Y-%m-%d %H:%M:%S"), endDate.strftime("%Y-%m-%d %H:%M:%S")
 
         cursor.execute(updateStatement)
         conn.commit()
 
+        # print "http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
+        #     "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S")
+
         # 发送请求生成账单
         urllib2.urlopen("http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
-            "%Y-%m-%d %H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d %H:%M:%S"))
+            "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S"))
 
         createTime = endDate
 
