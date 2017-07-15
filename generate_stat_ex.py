@@ -44,7 +44,7 @@ def generateBillStat(cmpId):
     # print (max_createTime[0] + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
     # print max_createTime[0].strftime("%Y-%m-%d %H:%M:%S")
 
-    createTime = max_createTime[0]
+    createTime = max_createTime[0] + datetime.timedelta(days=1)
     for statementId in all_statementId:
         updateStatement = """
                 update tbl_cmp_fund_statement set create_time = '%s' WHERE clear_id = %s
