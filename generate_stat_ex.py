@@ -74,4 +74,7 @@ if __name__ == '__main__':
     print "生成账单前，请确认该公司的账期是否含有脏数据！".encode("utf-8")
 
     cmpId = input("清输入公司ID:")
+
+    print "生成成功！".encode("utf-8")
+
     generateBillStat(cmpId)
