@@ -29,6 +29,7 @@ def generateBillStat(cmpId):
     select_max_createtime = """
                             select statement.create_time from tbl_cmp_fund_statement as statement
                             where cmp_id = %s
+                            AND statement.invite_pay_type = 1
                             order by statement.create_time desc limit 1
     """ % cmpId
 
@@ -60,15 +61,17 @@ def generateBillStat(cmpId):
         cursor.execute(updateStatement)
         conn.commit()
 
-        # print "http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
-        #     "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S")
+        print "http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
+             "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S")
 
         # 发送请求生成账单
-        urllib2.urlopen("http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
-            "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S"))
+        # urllib2.urlopen("http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
+        #     "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S"))
 
         createTime = endDate
 
+    print "http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + (max_createTime[0] + datetime.timedelta(days=1)).strftime(
+         "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S")
 
 if __name__ == '__main__':
     print "生成账单前，请确认该公司的账期是否含有脏数据！".encode("utf-8")
