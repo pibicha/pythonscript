@@ -20,8 +20,9 @@ def getConnection():
 
 def generateBillStat(cmpId):
     get_all_statementId = """
-                            select statement.clear_id from tbl_cmp_fund_statement as statement
+                            select statement.* from tbl_cmp_fund_statement as statement
                             where cmp_id = %s
+                            and create_time < date_add(curdate(), interval 1 day)
                             order by statement.create_time
     """ % cmpId
 
@@ -70,4 +71,7 @@ def generateBillStat(cmpId):
 
 
 if __name__ == '__main__':
-    generateBillStat(30)
+    print "生成账单前，请确认该公司的账期是否含有脏数据！".encode("utf-8")
+
+    cmpId = input("清输入公司ID:")
+    generateBillStat(cmpId)
