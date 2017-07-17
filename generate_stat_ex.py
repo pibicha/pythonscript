@@ -47,7 +47,11 @@ def generateBillStat(cmpId):
     # print max_createTime[0].strftime("%Y-%m-%d %H:%M:%S")
 
     createTime = max_createTime[0] + datetime.timedelta(days=1)
+    loop = 0
     for statementId in all_statementId:
+
+        loop += 1
+
         updateStatement = """
                 update tbl_cmp_fund_statement set create_time = '%s' WHERE clear_id = %s
             """ % (createTime.strftime("%Y-%m-%d %H:%M:%S"), statementId[0])
@@ -61,23 +65,37 @@ def generateBillStat(cmpId):
         cursor.execute(updateStatement)
         conn.commit()
 
-        print "http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
-             "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S")
+        print
+        "http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
+            "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S")
 
         # 发送请求生成账单
         # urllib2.urlopen("http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
         #     "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S"))
 
+        if loop % total == 0:
+            s =  max_createTime[0] + datetime.timedelta(days=1)
+            e = s +  datetime.timedelta(days=total)
+            print s.strftime("%Y-%m-%d%H:%M:%S") , e.strftime("%Y-%m-%d%H:%M:%S")
+
+            s,e = e,e + datetime.timedelta(days=total)
+
         createTime = endDate
 
-    print "http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + (max_createTime[0] + datetime.timedelta(days=1)).strftime(
-         "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S")
+    print
+    "http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + (max_createTime[0] + datetime.timedelta(days=1)).strftime(
+        "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S")
+
 
 if __name__ == '__main__':
-    print "生成账单前，请确认该公司的账期是否含有脏数据！".encode("utf-8")
+    print
+    "生成账单前，请确认该公司的账期是否含有脏数据！".encode("utf-8")
 
     cmpId = input("清输入公司ID:")
 
-    print "生成成功！".encode("utf-8")
+    total = input("stat number you need:")
+
+    print
+    "生成成功！".encode("utf-8")
 
     generateBillStat(cmpId)
