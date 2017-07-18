@@ -62,10 +62,6 @@ def generateBillStat(cmpId):
         cursor.execute(updateStatement)
         conn.commit()
 
-        # 发送请求生成账单
-        # urllib2.urlopen("http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
-        #     "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S"))
-
         if loop % total == 0:
             s = createTime
             e = s + datetime.timedelta(days=total)
@@ -73,9 +69,11 @@ def generateBillStat(cmpId):
 
             print "http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + s.strftime(
                 "%Y-%m-%d%H:%M:%S") + "&end=" + e.strftime("%Y-%m-%d%H:%M:%S")
+            # 发送请求生成账单
+            urllib2.urlopen("http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
+                "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S"))
 
             s, e = e, e + datetime.timedelta(days=total)
-
 
         loop += 1
         createTime = endDate
