@@ -18,20 +18,20 @@ def getConnection():
     return conn
 
 
-def generateBillStat(cmpId):
+def generateBillStat(cmpId, inviteType):
     get_all_statementId = """
                             select statement.* from tbl_cmp_fund_statement as statement
-                            where cmp_id = %s
+                            where cmp_id = %s AND statement.invite_pay_type = %s
                             and create_time < date_add(curdate(), interval 1 day)
                             order by statement.create_time
-    """ % cmpId
+    """ % (cmpId, inviteType)
 
     select_max_createtime = """
                             select statement.create_time from tbl_cmp_fund_statement as statement
                             where cmp_id = %s
-                            AND statement.invite_pay_type = 1
+                            AND statement.invite_pay_type = %s
                             order by statement.create_time desc limit 1
-    """ % cmpId
+    """ % (cmpId, inviteType)
 
     conn = getConnection()
     cursor = conn.cursor()
@@ -85,8 +85,10 @@ if __name__ == '__main__':
 
     cmpId = input("清输入公司ID:")
 
+    inviteType = input("账单类型 0：企业，1:检后")
+
     total = input("stat number you need:")
 
     print "生成成功！".encode("utf-8")
 
-    generateBillStat(cmpId)
+    generateBillStat(cmpId, inviteType)
