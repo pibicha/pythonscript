@@ -70,8 +70,8 @@ def generateBillStat(cmpId):
             print "http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + s.strftime(
                 "%Y-%m-%d%H:%M:%S") + "&end=" + e.strftime("%Y-%m-%d%H:%M:%S")
             # 发送请求生成账单
-            urllib2.urlopen("http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
-                "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S"))
+            # urllib2.urlopen("http://192.168.1.30:9001/v1_2/cmp/fund/stat?start=" + startDate.strftime(
+            #     "%Y-%m-%d%H:%M:%S") + "&end=" + endDate.strftime("%Y-%m-%d%H:%M:%S"))
 
             s, e = e, e + datetime.timedelta(days=total)
 
