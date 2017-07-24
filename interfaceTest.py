@@ -6,9 +6,11 @@ import redis
 from functools import wraps
 
 dom = "http://dev.feellike21.com/tahiti/cms/v1/hePackage"
-#logfile = open("./test_interface_configure.log", "w+")
 
 
+# logfile = open("./test_interface_configure.log", "w+")
+
+# 获取token的装饰器，如果没有登录，会要求先登录~~~
 def tokenRequired(**kwargs):
     def media(f):
         @wraps(f)
@@ -16,6 +18,7 @@ def tokenRequired(**kwargs):
             PREFIX_CMS_ACCESS_TOKEN = "ACCESS_TOKEN:CMS:"
             r = redis.Redis(host='192.168.1.30', port=6379, db=2, password='feellike21')
             token = r.get(PREFIX_CMS_ACCESS_TOKEN + str(kwargs['opId']))
+            # 将token设置到被装饰函数的关键字参数中，此处不能使用可变参数赋值~~
             kw['token'] = token
             if token is None:
                 print "token失效，先在网页端登录~！"
@@ -54,7 +57,7 @@ def request1(token):  # 更新集团账户信息
 def assertequal(expect, responsestr, requrl, comment):
     if demjson.decode(responsestr)["code"] == int(expect):
         pass
-        #logfile.write(comment + ":" + requrl + "\t" + responsestr + "\t" + expect + "\n")
+        # logfile.write(comment + ":" + requrl + "\t" + responsestr + "\t" + expect + "\n")
     print "$$$$$$$$$$$$$$$$$$$$$$$\n\n"
 
 
