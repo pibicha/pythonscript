@@ -46,8 +46,10 @@ def request1(token):  # 更新集团账户信息
             requrl += str(packageId)
 
         requrl = requrl + '?token=' + token
-        print 'requrl = ', requrl
-        response = urllib2.urlopen(requrl).read()
+        # print 'requrl = ', requrl
+        req = urllib2.Request(requrl)
+        req.add_header("token", token)
+        response = urllib2.urlopen(req).read()
         comment = parlist['comment']
 
         print comment, 'response is', response
