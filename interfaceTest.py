@@ -4,12 +4,7 @@ import urllib, urllib2, cookielib, threading, sys, time, base64, binascii, md5, 
 import demjson
 import redis
 from functools import wraps
-from collections import OrderedDict
 
-dom = "http://dev.feellike21.com/tahiti/cms/v1/hePackage"
-
-
-# logfile = open("./test_interface_configure.log", "w+")
 
 # 获取token的装饰器，如果没有登录，会要求先登录~~~
 def tokenRequired(**kwargs):
@@ -31,6 +26,7 @@ def tokenRequired(**kwargs):
     return media
 
 
+# 根据测试用例以及token，调用post\get接口
 def caseRunner(TestCase, token):
     for i in range(0, len(TestCase)):
         parlist = TestCase[i]
@@ -79,6 +75,10 @@ def caseRunner(TestCase, token):
         print comment, 'response is', response
         assertequal(parlist['expect result'], response, requrl, comment)
 
+
+dom = "http://dev.feellike21.com/tahiti/cms/v1/hePackage"
+# 调试结果输出目录
+logfile = open("./test_interface_configure.log", "w+")
 
 @tokenRequired(opId=5)
 def request1(token):
