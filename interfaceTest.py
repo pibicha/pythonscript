@@ -4,6 +4,7 @@ import urllib, urllib2, cookielib, threading, sys, time, base64, binascii, md5, 
 import demjson
 import redis
 from functools import wraps
+from collections import OrderedDict
 
 dom = "http://dev.feellike21.com/tahiti/cms/v1/hePackage"
 
@@ -30,30 +31,70 @@ def tokenRequired(**kwargs):
     return media
 
 
-@tokenRequired(opId=5)
-def request1(token):  # 更新集团账户信息
-    TestCase = [{'name': 'getHePakageInfoByHepackId1_1', 'comment': '调用成功', 'packageId': 100101,
-                 'expect result': '1000'}
-                ]
-    parlist = []
+def caseRunner(TestCase, token):
     for i in range(0, len(TestCase)):
         parlist = TestCase[i]
+        requrl = dom + parlist['name']
 
-        requrl = dom + '/getHePakageInfoByHepackIdV1_1/'
+        if parlist['method'] == 'GET':
+            for key in parlist:
+                if key == 'name' or key == 'method' or key == 'expect result' or key == 'comment':  # 这些字段是用于调试的，不需要设置到url中
+                    continue
+                else:
+                    if requrl.endswith('/'):  # 如果url最后一位是/，证明是占位符的请求方式
+                        requrl += str(parlist[key])
+                    else:
+                        if not '?' in requrl:
+                            requrl += '?'
+                        requrl = requrl + key + '=' + str(parlist[key]) + '&'
+                requrl = requrl.rstrip('&')
+        else:
+            params = dict()
+            if requrl.endswith('/'):  # 如果url最后一位是/，证明是占位符的请求方式
+                for k in parlist:
+                    if 'id' in k or 'Id' in k or 'ID' in k:
+                        requrl += str(parlist[k])
+                        parlist.pop(k)
+                        print requrl
+                        break
+            for key in parlist:
+                if key == 'name' or key == 'method' or key == 'expect result' or key == 'comment':  # 这些字段是用于调试的，不需要设置到url中
+                    continue
 
-        if 'packageId' in parlist:
-            packageId = parlist['packageId']
-            requrl += str(packageId)
+                params[key] = parlist[key]
 
-        requrl = requrl + '?token=' + token
         # print 'requrl = ', requrl
-        req = urllib2.Request(requrl)
-        req.add_header("token", token)
-        response = urllib2.urlopen(req).read()
+        if parlist['method'] == 'POST':
+            data = urllib.urlencode(params)
+            print data
+            req = urllib2.Request(url=requrl, data=data)
+            req.add_header("token", token)
+            response = urllib2.urlopen(req).read()
+        else:
+            req = urllib2.Request(requrl)
+            req.add_header("token", token)
+            response = urllib2.urlopen(req).read()
         comment = parlist['comment']
 
         print comment, 'response is', response
         assertequal(parlist['expect result'], response, requrl, comment)
+
+
+@tokenRequired(opId=5)
+def request1(token):
+    TestCase = [{'name': '/getHePakageInfoByHepackIdV1_1/', 'method': 'GET', 'comment': '调用成功', 'packageId': 100101,
+                 'expect result': '1000'}
+                ]
+    caseRunner(TestCase, token)
+
+
+@tokenRequired(opId=5)
+def request2(token):
+    TestCase = [{'name': '/updateRemarkByByHePaId/', 'method': 'POST', 'comment': '调用成功', 'packageId': 100177,
+                 'remark': 'pbxtest0006',
+                 'expect result': '1000'}
+                ]
+    caseRunner(TestCase, token)
 
 
 def assertequal(expect, responsestr, requrl, comment):
@@ -64,4 +105,4 @@ def assertequal(expect, responsestr, requrl, comment):
 
 
 if __name__ == '__main__':
-    request1()
+    request2()
