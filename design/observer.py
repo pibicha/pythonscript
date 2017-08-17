@@ -53,7 +53,7 @@ class Storm:
 
 class Sunny:
     def update(self, dashboard):
-        print("{0}今天晴转{0}".format(dashboard.name, dashboard.content))
+        print("{0}今天晴转{1}".format(dashboard.name, dashboard.content))
 
 
 if __name__ == '__main__':
