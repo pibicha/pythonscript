@@ -48,7 +48,7 @@ class Province(Dashboard):
 
 class Storm:
     def update(self, dashboard):
-        print("{0}今天雷转{1}".format(dashboard.name, dashboard.content))  # 在这一步，如果是在java中，会找不到content属性，但由于
+        print("{0}今天雷转{1}".format(dashboard.name, dashboard.content))
 
 
 class Sunny:
