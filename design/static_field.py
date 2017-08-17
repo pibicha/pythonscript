@@ -7,6 +7,8 @@ python类中的__dict__，是类属性， 同时是保存了所有实例信息�
 所以每次创建Borg的实例时，其__init__类属性都会被置为空，而在新的
 实例和以前的实例，都会共享新的属性
 """
+
+
 # 参考 http://ginstrom.com/scribbles/2007/10/08/design-patterns-python-style/
 
 class Borg(object):
@@ -17,7 +19,7 @@ class Borg(object):
         self.state = 'Init'
 
     def __str__(self):
-        return self.state
+        return self.state  # 这一步的隐含操作是 __dict__.get('state')
 
 
 class YourBorg(Borg):
