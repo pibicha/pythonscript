@@ -8,6 +8,7 @@
 """
 from __future__ import print_function
 
+
 def lazy_property(fn):
     attr = '_lazy__' + fn.__name__
 
@@ -33,6 +34,27 @@ class Person(object):
         return relatives
 
 
+def lazy_property2(fn):
+    methodname = '_lazy__' + fn.__name__
+
+    @property
+    def say(self):
+        if not hasattr(self, methodname):
+            setattr(self, methodname, fn(self))
+        return getattr(self, methodname)
+
+    return say
+
+
+class Animal(object):
+    def __init__(self, sort):
+        self.sort = sort
+
+    @lazy_property2
+    def say(self):
+        return 'kkkkkk'
+
+
 if __name__ == '__main__':
     Jhon = Person('Jhon', 'Coder')
     print(u"Name: {0}    Occupation: {1}".format(Jhon.name, Jhon.occupation))
@@ -41,3 +63,12 @@ if __name__ == '__main__':
     print(u"Jhon's relatives: {0}".format(Jhon.relatives))
     print(u"After we've accessed `relatives`:")
     print(Jhon.__dict__)
+
+    print("===============================================================================================")
+    DaloDuck = Animal('duck')
+    print("Name : {0}".format(DaloDuck.sort))
+    print(u"Before we access `say`:")
+    print(DaloDuck.__dict__)
+    print(u"DaloDuck say: {0}".format(DaloDuck.say))
+    print(u"After we've accessed `say`:")
+    print(DaloDuck.__dict__)
