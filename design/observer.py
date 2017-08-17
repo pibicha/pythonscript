@@ -33,7 +33,7 @@ class Content(Dashboard):
     def __init__(self, name=''):
         Dashboard.__init__(self)
         self.name = name
-        self._content = 0
+        self._content = ''
 
     @property
     def content(self):
