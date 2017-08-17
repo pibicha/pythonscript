@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 """
 实现懒加载，方式一不太好看 ，参考 https://github.com/faif/python-patterns/blob/master/creational/lazy_evaluation.py
+
+该方式实现懒加载的原理，主要是通过python的动态性质；在对象创建后，为其绑定一个属性~！从而实现懒加载
+
+
 """
 from __future__ import print_function
-
 
 def lazy_property(fn):
     attr = '_lazy__' + fn.__name__
 
-    @property
-    def _lazy_property(self):
+    @property  # 属性装饰器
+    def _lazy_property(self):  # 此处的self为什么是Person的实例？？？ 个人猜测是因为lazy_property作为注解被Person实例调用，所以self会一路传入到这
         if not hasattr(self, attr):
             setattr(self, attr, fn(self))
         return getattr(self, attr)

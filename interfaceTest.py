@@ -12,7 +12,7 @@ def tokenRequired(**kwargs):
         @wraps(f)
         def wrapper(*args, **kw):
             PREFIX_CMS_ACCESS_TOKEN = "ACCESS_TOKEN:CMS:"
-            r = redis.Redis(host='192.168.1.30', port=6379, db=2, password='feellike21')
+            r = redis.Redis(host='192.168.1.30', port=6379, db=2, password='secret')
             token = r.get(PREFIX_CMS_ACCESS_TOKEN + str(kwargs['opId']))
             # 将token设置到被装饰函数的关键字参数中，此处不能使用可变参数赋值~~
             kw['token'] = token
