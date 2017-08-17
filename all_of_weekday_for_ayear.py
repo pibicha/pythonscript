@@ -1,0 +1,17 @@
+from datetime import date, timedelta
+
+
+def allweekdays(year):
+    d = date(year, 8, 20)  # January 1st
+    d += timedelta(days=6 - d.weekday())  # First weekday
+    while d.year == year:
+        yield d
+        d += timedelta(days=7)
+
+
+if __name__ == '__main__':
+    allweekdaystr = ''
+    for d in allweekdays(2017):
+        #print d.strftime('%Y-%m-%d')
+        allweekdaystr += d.strftime('%Y-%m-%d')+';'
+    print allweekdaystr
