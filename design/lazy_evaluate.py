@@ -40,7 +40,7 @@ def lazy_property2(fn):
     @property
     def say(self):
         if not hasattr(self, methodname):
-            setattr(self, methodname, fn(self))
+            setattr(self, methodname, fn(self))  # 为Animal类的实例绑定方法时，同时调用被装饰的方法！
         return getattr(self, methodname)
 
     return say
