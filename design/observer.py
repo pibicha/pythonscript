@@ -29,7 +29,7 @@ class Dashboard(object):
                 observer.update(self)  # 观察者需要根据主题中的内容变化时，做出自己的调整
 
 
-class Content(Dashboard):
+class Province(Dashboard):
     def __init__(self, name=''):
         Dashboard.__init__(self)
         self.name = name
@@ -48,17 +48,17 @@ class Content(Dashboard):
 
 class Storm:
     def update(self, dashboard):
-        print("今天雷转{0}".format(dashboard.content))
+        print("{0}今天雷转{1}".format(dashboard.name, dashboard.content))  # 在这一步，如果是在java中，会找不到content属性，但由于
 
 
 class Sunny:
     def update(self, dashboard):
-        print("今天晴转{0}".format(dashboard.content))
+        print("{0}今天晴转{0}".format(dashboard.name, dashboard.content))
 
 
 if __name__ == '__main__':
-    c1 = Content('CT 1')
-    c2 = Content('CT 2')
+    c1 = Province('北京')
+    c2 = Province('上海')
 
     storm = Storm()
     sunny = Sunny()
@@ -68,4 +68,3 @@ if __name__ == '__main__':
 
     c1.content = '多云'
     c2.content = '阵雨'
-
