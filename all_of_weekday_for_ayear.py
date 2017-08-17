@@ -3,7 +3,6 @@ from datetime import date, timedelta
 
 def allweekdays(year):
     d = date(year, 8, 20)  # January 1st
-    d += timedelta(days=6 - d.weekday())  # First weekday
     while d.year == year:
         yield d
         d += timedelta(days=7)
