@@ -15,7 +15,7 @@ def count():
     return fs
 
 
-def mul():  # 该方法同count方法，lambda中使用了包外变量，而不是立即执行！ 执行顺序，i的赋值早于lambda，所以造成free variable capture
+def mul():  # 该方法同count方法，lambda中使用了包外变量，而不是立即执行！ 执行顺序，i的赋值早于lambda，而lambda不会立刻执行(参考count方法)，所以造成free variable capture
     return [lambda x: i * i for i in range(4)]
 
 
