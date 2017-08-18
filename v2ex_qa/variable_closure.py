@@ -1,6 +1,6 @@
 # -*-coding:utf-8-*-
 """
-free variable capture 问题：当在闭包中使用包外的变量时，该变量的值只会是最终值
+当在闭包中使用包外的变量时，该变量的值只会是最终值
 参考：https://www.v2ex.com/t/380331#reply10
 """
 
