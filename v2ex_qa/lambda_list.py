@@ -9,7 +9,7 @@ def count():
     fs = []
     for i in range(0, 4):
         def f(x):
-            return x * i  # 闭包中使用了外部的局部变量
+            return x * i  # 闭包中使用了外部的局部变量，并且这一步只有count实例调用f方法时才会执行！
 
         fs.append(f)
     return fs
