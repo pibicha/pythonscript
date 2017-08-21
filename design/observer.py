@@ -31,16 +31,18 @@ class Dashboard(object):
 
 class Province(Dashboard):
     def __init__(self, name=''):
-        Dashboard.__init__(self)
+        Dashboard.__init__(self)  # 这里得显示调用父类构造器，和java还不一样
         self.name = name
-        self._content = ''
+        # self._content = ''python属性定义很灵活，不一定要在init方法中申明，不过在这申明比较规范
 
     @property
     def content(self):
+        # return self.content
         return self._content
 
     @content.setter
     def content(self, content):
+        # self.content = content 属性名一定不要和方法名一样，，否则会认为将方法引用赋值属性，，同时这里又会调用方法，形成递归
         self._content = content
         # 当内容有变时，需要调用notify
         self.notify()
