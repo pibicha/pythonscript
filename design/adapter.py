@@ -30,6 +30,7 @@ class Human(object):
 
 
 class Car(object):
+    # 适配类
     def __init__(self):
         self.name = "Car"
 
