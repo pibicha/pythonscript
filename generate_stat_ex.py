@@ -10,7 +10,7 @@ sys.setdefaultencoding('utf8')
 
 dbHost = "192.168.1.20"
 dbUser = "root"
-dbPasswd = "Admin@123"
+dbPasswd = "xxxx"
 
 
 def getConnection():
