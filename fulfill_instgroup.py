@@ -10,9 +10,9 @@ import pymysql
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-dbHost = "192.168.1.20"
-dbUser = "z"
-dbPasswd = "z"
+dbHost = "secret"
+dbUser = "secret"
+dbPasswd = "secret"
 
 
 # 获取数据库连接
@@ -21,7 +21,7 @@ def getConnection():
     return conn
 
 
-# 获取所有连锁机构
+# 1 获取所有连锁机构
 def get_all_group():
     conn = getConnection()
     cursor = conn.cursor()
@@ -32,7 +32,7 @@ def get_all_group():
     return [outer[0] for outer in all_group]
 
 
-# 获取所有连锁下的机构
+# 2 获取所有连锁旗下的机构
 def get_all_inst(group):
     conn = getConnection()
     cursor = conn.cursor()
@@ -43,7 +43,7 @@ def get_all_inst(group):
     return [outer[0] for outer in all_inst]
 
 
-# 将group作为key，旗下的insts作为value
+# 3 将group作为key，旗下的insts作为value
 def concat_group_inst():
     all_group = get_all_group()
     group_inst = {}
@@ -52,7 +52,7 @@ def concat_group_inst():
         group_inst[group] = insts
     return group_inst
 
-# 获取所有套餐，将support_inst_group字段回填上去
+# 4 获取所有套餐，将support_inst_group字段回填上去
 def fulfill_inst_group():
     conn = getConnection()
     cursor = conn.cursor()
@@ -75,12 +75,19 @@ def fulfill_inst_group():
         print "套餐Id:",packId
         groups = find_group_by_inst(insts)
         print groups
+        if groups =='':# 该机构已经被删除，找不到对应的连锁，将该套餐置为删除
+            cursor.execute(disable_package(packId))
+            conn.commit()
         fulfill_group = "update tbl_he_package set support_inst_group='%s' where pack_id='%s'" % (groups,packId)
         cursor.execute(fulfill_group)
         conn.commit()
 
 
     return pack_inst
+
+# 将套餐置为不可用
+def disable_package(packId):
+    return "update tbl_he_package set `status` = 0 where pack_id='%s'" % packId
 
 # 找出套餐支持的机构都属于哪些连锁
 def find_group_by_inst(insts):
