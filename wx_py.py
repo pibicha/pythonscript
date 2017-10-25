@@ -12,7 +12,8 @@ import pymysql
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-
+d
+reserve_file_path = r'd:\\files\\'
 
 
 # 获取数据库连接
@@ -83,4 +84,5 @@ if __name__ == '__main__':
         file_in_path = reserve_file_path + emit_file
 
         print file_in_path
+
         friend.send_file(file_in_path)
