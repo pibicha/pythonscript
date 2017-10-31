@@ -2,18 +2,17 @@
 import os
 import sys
 from datetime import datetime, timedelta
+from random import randint
 
 import pymysql
 
-"""
-由于tbl_he_package新增support_inst_group，默认值为空；
-后续逻辑需要使用该字段会报错，故通过该脚本设置该字段
-"""
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-d
-reserve_file_path = r'd:\\files\\'
+dbHost = "XXX"
+dbUser = "XXX"
+dbPasswd = "XXX"
+reserve_file_path = r'XXX'
 
 
 # 获取数据库连接
@@ -57,7 +56,7 @@ def exist_files(should_emit_files):
     files = os.listdir(reserve_file_path)
     if files:
         for file in files:
-            file_name = file.decode('gbk')
+            file_name = file.decode('utf-8')  # 针对window而言！！
             # print file_name
             if file_name in should_emit_files:
                 could_emit_files.append(file_name)
@@ -67,22 +66,48 @@ def exist_files(should_emit_files):
 
 if __name__ == '__main__':
 
-    # 导入微信模块
-    from wxpy import *
+    from itchat import *
+    import time
 
-    # 初始化机器人，扫码登陆
-    bot = Bot(console_qr=1, cache_path=True)
+    auto_login(hotReload=True, enableCmdQR=2)
 
-    inst_files_map = tomorrow_reserve(subway_institution())
-    could_emit_files = exist_files(inst_files_map.keys())
-    for emit_file in could_emit_files:
-        # print e.encode('utf-8')
-        emit_file = emit_file.encode('utf-8')
-        inst_name = inst_files_map.get(emit_file).encode('utf-8')
-        # print emit_file, inst_name
-        friend = bot.friends().search(inst_name.decode('utf-8'))[0]
-        file_in_path = reserve_file_path + emit_file
+    now_time = time.time()
+    now_time = time.localtime(now_time)
+    # time.struct_time(tm_year=2017, tm_mon=10, tm_mday=27, tm_hour=18, tm_min=21, tm_sec=25, tm_wday=4, tm_yday=300, tm_isdst=0)
 
-        print file_in_path
 
-        friend.send_file(file_in_path)
+    if now_time.tm_hour == 14 and now_time.tm_min == 1:
+        from multiprocessing.dummy import Pool
+
+        pool = Pool()
+        args = []
+
+        inst_files_map = tomorrow_reserve(subway_institution())
+        could_emit_files = exist_files(inst_files_map.keys())
+        for emit_file in could_emit_files:
+            # print e.encode('utf-8')
+            emit_file = emit_file.encode('utf-8')
+            inst_name = inst_files_map.get(emit_file).encode('utf-8')
+            # print emit_file, inst_name
+            print inst_name
+            friends = search_friends(name=inst_name)
+            if len(friends) == 0:
+                print 'no user named %s in your friendList' % inst_name
+                continue
+            else:
+                friend = friends[0]
+            file_in_path = reserve_file_path + emit_file
+
+            print file_in_path
+            # IO密集，使用多线程发送消息send_file(file_in_path.decode('utf-8'), toUserName=friend.get('UserName'))
+            arg = pool.apply_async(send_file, (file_in_path.encode('utf-8'),),
+                                   kwds={'toUserName': friend.get('UserName')})
+            args.append(arg)
+        pool.close()
+        pool.join()
+        time.sleep(60)
+        exit(0)
+    if now_time.tm_min % 2 == 0:
+        send_msg(randint(1, 100000))
+        time.sleep(60)
+        exit(0)
