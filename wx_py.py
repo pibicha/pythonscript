@@ -73,6 +73,7 @@ if __name__ == '__main__':
 
     now_time = time.time()
     now_time = time.localtime(now_time)
+
     # time.struct_time(tm_year=2017, tm_mon=10, tm_mday=27, tm_hour=18, tm_min=21, tm_sec=25, tm_wday=4, tm_yday=300, tm_isdst=0)
 
 
@@ -107,7 +108,7 @@ if __name__ == '__main__':
         pool.join()
         time.sleep(60)
         exit(0)
-    if now_time.tm_min % 2 == 0:
+    if now_time.tm_min % 1 == 0:
         send_msg(randint(1, 100000))
         time.sleep(60)
         exit(0)
